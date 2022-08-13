@@ -1,6 +1,7 @@
 import 'package:electro_peyk/app/data/models/order_model.dart';
 import 'package:electro_peyk/app/presantation/pages/support_page/support_page.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shamsi_date/shamsi_date.dart';
 
@@ -14,7 +15,7 @@ class HomeController extends GetxController with StateMixin{
   RxList services = [].obs;
   RxList orders = [].obs;
   RxList messages = [].obs;
-
+  final GlobalKey<AnimatedListState> key = GlobalKey();
   @override
   void onInit() {
     super.onInit();
@@ -76,9 +77,10 @@ class HomeController extends GetxController with StateMixin{
     change(null,status: RxStatus.success());
   }
   Future getOrders()async{
-    orders.clear();
+
     change(null,status: RxStatus.loading());
     await Future.delayed(const Duration(seconds: 1));
+    orders.clear();
     orders.add(OrderModel(title: "گوشی صوتی مستقل همراه تصویری",address: "میدان ولیعصر، خیابان شقایق",code: "1255643884",date: "سه شنبه 16 شهریور ساعت 15:00 الی 18:00",imageUrl: "assets/orders/o1.png",isRepair: true));
     orders.add(OrderModel(title: "گوشی تصویری 10 اینچ مدل 1198",address: "میدان ولیعصر، خیابان شقایق",code: "1255643884",date: "سه شنبه 16 شهریور ساعت 18:00 الی 20:00",imageUrl: "assets/orders/o2.png",isRepair: true));
     orders.add(OrderModel(title: "صفحه دم دری صوتی مدل 875",address: "میدان ولیعصر، خیابان شقایق",code: "1255643884",date: "پنج شنبه 16 شهریور ساعت 18:00 الی 20:00",imageUrl: "assets/orders/o3.png",isRepair: false));
@@ -86,4 +88,40 @@ class HomeController extends GetxController with StateMixin{
     orders.add(OrderModel(title: "گوشی مستقل همراه تصویری",address: "میدان ولیعصر، خیابان شقایق",code: "1255643884",date: "پنج شنبه 16 شهریور ساعت 18:00 الی 20:00",imageUrl: "assets/orders/o5.png",isRepair: false));
     change(null,status: RxStatus.success());
   }
+  search(String text){
+    if(text == "") {
+      getOrders();
+      Get.focusScope!.unfocus();
+    }
+    var list = orders.where((p0)=> p0.title.contains(text)).toList();
+    orders.clear();
+    orders.addAll(list);
+    change(null,status: RxStatus.success());
+    int i =0;
+  }
+  Future<bool> showExitPopup() async {
+    return await showDialog( //show confirm dialogue
+      //the return value will be from "Yes" or "No" options
+      context: Get.context!,
+      builder: (context) => AlertDialog(
+        title: Text('خروج از برنامه'),
+        content: Text('آیا می خواهید از برنامه خارج شوید؟'),
+        actions:[
+          ElevatedButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            //return false when click on "NO"
+            child:Text('خیر',style: Get.theme.textTheme.button),
+          ),
+
+          ElevatedButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            //return true when click on "Yes"
+            child:Text('بله',style: Get.theme.textTheme.button),
+          ),
+
+        ],
+      ),
+    )??false; //if showDialouge had returned null, then return false
+  }
+
 }

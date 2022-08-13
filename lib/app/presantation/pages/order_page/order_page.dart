@@ -12,7 +12,7 @@ class OrderPage extends GetView<HomeController> {
   OrderPage({Key? key}) : super(key: key){
     controller.getOrders();
   }
-
+  final GlobalKey<AnimatedListState> _key = GlobalKey();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,7 +23,7 @@ class OrderPage extends GetView<HomeController> {
           backgroundColor: Color(0xfffffffff),
           automaticallyImplyLeading: false,
           toolbarHeight: Get.height * 0.1,
-          title: MyAppBar()),
+          title: MyAppBar(parentAction: controller.search,)),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: body(),
@@ -34,9 +34,11 @@ class OrderPage extends GetView<HomeController> {
     return controller.obx((state) =>
         LiquidPullToRefresh(
           height: 50,
+          showChildOpacityTransition: false,
           color: Get.theme.primaryColor,
           onRefresh: controller.getOrders,
-          child: ListView.builder(
+          child:
+          ListView.builder(
       itemCount: controller.orders.length,
           itemBuilder: (context,index){
             return OrderWidget(orderItem: controller.orders[index],);

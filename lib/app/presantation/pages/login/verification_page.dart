@@ -11,7 +11,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class VerificationPage extends GetView<LoginController> {
-  VerificationPage({Key? key}) : super(key: key);
+  VerificationPage({Key? key}) : super(key: key){
+    controller.getCode();
+  }
   bool isKeyboard = false;
   @override
   Widget build(BuildContext context) {
@@ -47,60 +49,57 @@ class VerificationPage extends GetView<LoginController> {
                           ),
                         ),
                       ),
-                      Obx(
-                            () =>
-                            Row(
-                              children: [
-                                const SizedBox(
-                                  width: 15,
-                                ),
-                                Expanded(
-                                  child: VerificationInput(
-                                      textFieldFocus: controller.focusNode5,
-                                      verificationController:
-                                      controller.verificationController5!),
-                                ),
-                                const SizedBox(
-                                  width: 15,
-                                ),
-                                Expanded(
-                                  child: VerificationInput(
-                                      textFieldFocus: controller.focusNode4,
-                                      verificationController:
-                                      controller.verificationController4!),
-                                ),
-                                const SizedBox(
-                                  width: 15,
-                                ),
-                                Expanded(
-                                  child: VerificationInput(
-                                      textFieldFocus: controller.focusNode3,
-                                      verificationController:
-                                      controller.verificationController3!),
-                                ),
-                                const SizedBox(
-                                  width: 15,
-                                ),
-                                Expanded(
-                                  child: VerificationInput(
-                                      textFieldFocus: controller.focusNode2,
-                                      verificationController:
-                                      controller.verificationController2!),
-                                ),
-                                const SizedBox(
-                                  width: 15,
-                                ),
-                                Expanded(
-                                  child: VerificationInput(
-                                      textFieldFocus: controller.focusNode1,
-                                      verificationController:
-                                      controller.verificationController1!),
-                                ),
-                                const SizedBox(
-                                  width: 15,
-                                ),
-                              ],
-                            ),
+                      Row(
+                        children: [
+                          const SizedBox(
+                            width: 15,
+                          ),
+                          Expanded(
+                            child: VerificationInput(
+                                textFieldFocus: controller.focusNode5,
+                                verificationController:
+                                controller.verificationController5!),
+                          ),
+                          const SizedBox(
+                            width: 15,
+                          ),
+                          Expanded(
+                            child: VerificationInput(
+                                textFieldFocus: controller.focusNode4,
+                                verificationController:
+                                controller.verificationController4!),
+                          ),
+                          const SizedBox(
+                            width: 15,
+                          ),
+                          Expanded(
+                            child: VerificationInput(
+                                textFieldFocus: controller.focusNode3,
+                                verificationController:
+                                controller.verificationController3!),
+                          ),
+                          const SizedBox(
+                            width: 15,
+                          ),
+                          Expanded(
+                            child: VerificationInput(
+                                textFieldFocus: controller.focusNode2,
+                                verificationController:
+                                controller.verificationController2!),
+                          ),
+                          const SizedBox(
+                            width: 15,
+                          ),
+                          Expanded(
+                            child: VerificationInput(
+                                textFieldFocus: controller.focusNode1,
+                                verificationController:
+                                controller.verificationController1!),
+                          ),
+                          const SizedBox(
+                            width: 15,
+                          ),
+                        ],
                       ),
                       !isKeyboard ?const Expanded(
                         child: SizedBox(),):Container(),
@@ -119,7 +118,7 @@ class VerificationPage extends GetView<LoginController> {
                         children: [
                           Expanded(
                             child: ButtonWidget(
-                              onPress: ontap,
+                              onPress: onTap,
                               text: "ورود / ثبت نام",
                             ),
                           ),
@@ -135,7 +134,7 @@ class VerificationPage extends GetView<LoginController> {
 
   }
 
-  ontap() {
+  onTap() {
     Get.offAllNamed(AppRoutes.signUpPage);
   }
 }

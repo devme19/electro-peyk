@@ -84,7 +84,7 @@ class _SplashScreenState extends State<SplashScreen>
       });
     logoColorAnimationController!.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        Get.offAndToNamed(AppRoutes.homePage);
+        Get.offAndToNamed(AppRoutes.loginPage);
       }
     });
   }

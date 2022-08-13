@@ -1,3 +1,4 @@
+import 'package:electro_peyk/app/presantation/routes/app_routes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
@@ -23,4 +24,14 @@ class LoginController extends GetxController {
   }
 
   FocusNode texFieldFocus = FocusNode();
+  getCode()async{
+   await Future.delayed(const Duration(seconds: 1));
+   verificationController1!.text= "4";
+   verificationController2!.text= "1";
+   verificationController3!.text= "7";
+   verificationController4!.text= "9";
+   verificationController5!.text= "2";
+   await Future.delayed(const Duration(seconds: 1));
+   Get.offAllNamed(AppRoutes.signUpPage);
+  }
 }

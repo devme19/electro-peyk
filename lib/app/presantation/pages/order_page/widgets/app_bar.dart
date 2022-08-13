@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class MyAppBar extends StatelessWidget {
-  const MyAppBar({Key? key}) : super(key: key);
-
+  MyAppBar({Key? key,this.parentAction}) : super(key: key);
+  ValueChanged<String>? parentAction;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -39,6 +39,9 @@ class MyAppBar extends StatelessWidget {
               child: SizedBox(
                 height: 49,
                 child: TextField(
+                  onChanged: (text){
+                    parentAction!(text);
+                  },
                   style: MyTextStyle().style12,
                   decoration: InputDecoration(
                       prefixIcon: InkWell(

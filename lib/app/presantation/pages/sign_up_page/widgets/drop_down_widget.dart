@@ -278,7 +278,7 @@ class _DropDownWidgetState extends State<DropDownWidget>
 }
 
 class CustDropdownMenuItem extends StatelessWidget {
-  String? value;
+  int? value;
   String? title;
   int? index;
   int? selectedIndex;

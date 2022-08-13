@@ -1,3 +1,4 @@
+import 'package:electro_peyk/app/data/models/signup_model.dart';
 import 'package:electro_peyk/app/presantation/controllers/sign_up_controller.dart';
 import 'package:electro_peyk/app/presantation/pages/public_widgets/button_widget.dart';
 import 'package:electro_peyk/app/presantation/pages/public_widgets/header_widget.dart';
@@ -14,18 +15,20 @@ import 'package:get/get.dart';
 
 class SignUpPage extends GetView<SignUpController> {
   SignUpPage({Key? key}) : super(key: key){
+    if(Get.arguments != null){
+      signUpModel = Get.arguments;
+      isEdit = true;
+      nameFamilyController.text = signUpModel!.name!;
+      nationalCodeController.text = signUpModel!.nationalCode!;
+    }
     controller.getCities();
   }
+  bool isEdit = false;
   bool isKeyboard = false;
   final _formKey = GlobalKey<FormState>();
   TextEditingController nameFamilyController = TextEditingController();
-
-
-  selectedItem(String item){
-    print(item);
-
-  }
-  String? selectedValue;
+  TextEditingController nationalCodeController = TextEditingController();
+  SignUpModel? signUpModel = SignUpModel(isMarried: false,isMale:false,cityIndex: -1);
   @override
   Widget build(BuildContext context) {
     final focus = FocusNode();
@@ -39,11 +42,11 @@ class SignUpPage extends GetView<SignUpController> {
         Form(
           key: _formKey,
           child:
-          SizedBox(
-            height: Get.height,
-            child: ListView(
-              children: [
-                Column(
+          ListView(
+            children: [
+              SizedBox(
+                height: Get.height-35,
+                child: Column(
                   children: [
                      const SizedBox(
                          height: 250,
@@ -65,7 +68,7 @@ class SignUpPage extends GetView<SignUpController> {
                               onTap: () {
                               },
                               textAlign: TextAlign.start,
-                              controller: controller.userNameController,
+                              controller: nameFamilyController,
                               style: MyTextStyle().style8,
                               showCursor: false,
                               onEditingComplete: (){
@@ -101,7 +104,7 @@ class SignUpPage extends GetView<SignUpController> {
                               onTap: () {
                               },
                               textAlign: TextAlign.start,
-                              controller: nameFamilyController,
+                              controller: nationalCodeController,
                               style: MyTextStyle().style8,
                               showCursor: false,
                               decoration: InputDecoration(
@@ -119,9 +122,9 @@ class SignUpPage extends GetView<SignUpController> {
                             ),
                           ),
                           const SizedBox(height: 16.0,),
-                          SelectWidget(title: "جنسیت",value: ["مرد","زن"]),
+                          SelectWidget(title: "جنسیت",value: ["مرد","زن"],selectedItem: genderSelectedItem,initialValue: signUpModel!.isMale),
                           const SizedBox(height: 16.0,),
-                          SelectWidget(title: "وضعیت تاهل",value: ["متاهل","مجرد"]),
+                          SelectWidget(title: "وضعیت تاهل",value: ["متاهل","مجرد"],selectedItem: maritalStatusSelected,initialValue: signUpModel!.isMarried),
                           const SizedBox(height: 16.0,),
                           GetBuilder<SignUpController>(builder: (controller) {
                             return DropDownWidget(
@@ -129,8 +132,11 @@ class SignUpPage extends GetView<SignUpController> {
                               items: controller.cityList,
                               hintText: "انتخاب شهر",
                               borderRadius: 5,
-                              onChanged: (val) {
-                                print("val"+val.toString());
+                              defaultSelectedIndex: signUpModel!.cityIndex!,
+                              onChanged: (index) {
+                                print("val"+index.toString());
+                                signUpModel!.cityIndex = controller.cityList[index!].value!;
+                                signUpModel!.city = controller.cityList[index!].title!;
                               },
                             );
                           }),
@@ -171,60 +177,86 @@ class SignUpPage extends GetView<SignUpController> {
                             ],
                           ),
                           const SizedBox(height: 16.0,),
-                          WarningBox(text: "متخصص گرامی: بعد از ثبت نام مشخصات شما توسط کارشناسان بررسی می‌شود بنابراین در وارد کردن مشخصات خود دقت فرمایید"),
-                          const SizedBox(height: 16.0,),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: ButtonWidget(
-                                    text: "ثبت نام",
-                                    onPress: () {
-                                      if (_formKey.currentState!.validate()) {
-                                        controller.userName!.value =
-                                            controller.userNameController.text;
-                                        if (controller.isAgree!.value &&
-                                            controller
-                                                .userNameController.text.isNotEmpty) {
-                                          // Get.snackbar(
-                                          //     "${controller.userName!.value} عزیز ",
-                                          //     "شما با موفقیت وارد شدید",
-                                          //     snackStyle: SnackStyle.FLOATING,
-                                          //     colorText: const Color(0xff1980FF));
-                                          Get.toNamed(AppRoutes.validationPage);
-                                        } else if (controller
-                                            .userNameController.text.isEmpty) {
-                                          Get.snackbar(
-                                              "خطا", "لطفا نام کاربری خود را وارد کنید",
-                                              snackStyle: SnackStyle.FLOATING,
-                                              colorText: Colors.redAccent);
-                                          return;
-                                        } else if (controller.isAgree!.value == false) {
-                                          Get.snackbar("خطا",
-                                              "لطفا موافقت خود با شرایط اپ را تایید کنید",
-                                              snackStyle: SnackStyle.FLOATING,
-                                              colorText: Colors.redAccent);
-                                          return;
-                                        }
-                                      }
-                                    }),
-                              ),
-                            ],
-                          ),
+
                         ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            WarningBox(text: "متخصص گرامی: بعد از ثبت نام مشخصات شما توسط کارشناسان بررسی می‌شود بنابراین در وارد کردن مشخصات خود دقت فرمایید"),
+                            const SizedBox(height: 16.0,),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: ButtonWidget(
+                                      text: isEdit?"ویرایش":"ثبت نام",
+                                      onPress: () {
+                                        if (_formKey.currentState!.validate()) {
+                                          if (controller.isAgree!.value == false) {
+                                            Get.snackbar("خطا",
+                                                "لطفا موافقت خود با شرایط اپ را تایید کنید",
+                                                snackStyle: SnackStyle.FLOATING,
+                                                colorText: Colors.redAccent);
+                                            return;
+                                          }
+                                          else{
+                                            signUpModel!.name = nameFamilyController.text;
+                                            signUpModel!.nationalCode = nationalCodeController.text;
+                                            Get.toNamed(AppRoutes.validationPage,arguments: signUpModel);
+                                          }
+
+                                          // if (controller.isAgree!.value &&
+                                          //     controller
+                                          //         .userNameController.text.isNotEmpty) {
+                                          //   // Get.snackbar(
+                                          //   //     "${controller.userName!.value} عزیز ",
+                                          //   //     "شما با موفقیت وارد شدید",
+                                          //   //     snackStyle: SnackStyle.FLOATING,
+                                          //   //     colorText: const Color(0xff1980FF));
+                                          //   Get.toNamed(AppRoutes.validationPage);
+                                          // } else if (controller
+                                          //     .userNameController.text.isEmpty) {
+                                          //   Get.snackbar(
+                                          //       "خطا", "لطفا نام کاربری خود را وارد کنید",
+                                          //       snackStyle: SnackStyle.FLOATING,
+                                          //       colorText: Colors.redAccent);
+                                          //   return;
+                                          // } else
+                                          // if (controller.isAgree!.value == false) {
+                                          //   Get.snackbar("خطا",
+                                          //       "لطفا موافقت خود با شرایط اپ را تایید کنید",
+                                          //       snackStyle: SnackStyle.FLOATING,
+                                          //       colorText: Colors.redAccent);
+                                          //   return;
+                                          // }
+                                        }
+                                      }),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
 
-  ontap() {
-    Get.toNamed(AppRoutes.verificationPage);
+  genderSelectedItem(bool value){
+    signUpModel!.isMale = value;
+  }
+  maritalStatusSelected(bool value){
+    signUpModel!.isMarried = value;
   }
 
   openDialog() {

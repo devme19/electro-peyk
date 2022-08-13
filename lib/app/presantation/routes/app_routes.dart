@@ -40,7 +40,7 @@ class App {
     ),
     GetPage(
       name: AppRoutes.validationPage,
-      page: () => const ValidationPage(),
+      page: () => ValidationPage(),
     ),
     GetPage(
         name: AppRoutes.loginPage,
